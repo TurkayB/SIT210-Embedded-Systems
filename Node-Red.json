@@ -1,0 +1,1350 @@
+[
+    {
+        "id": "8eb383b3f8431e5d",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "mqtt_in",
+        "type": "mqtt in",
+        "z": "8eb383b3f8431e5d",
+        "name": "MQTT Sensor Data",
+        "topic": "sensors_data",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "b719bec00e8d9d89",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 270,
+        "y": 380,
+        "wires": [
+            [
+                "1cd8c88cce9f9657",
+                "94312657021d26f7",
+                "1164d906a302790c",
+                "cebe1e92633524e1"
+            ]
+        ]
+    },
+    {
+        "id": "check_thresholds",
+        "type": "function",
+        "z": "8eb383b3f8431e5d",
+        "name": "Check Temp",
+        "func": "let data = msg.payload;\n\nif (isNaN(data)) {\n  msg.payload = \"NOT CONNECTED\";\n  return msg;\n}\n\nlet tempMinimum = global.get(\"tempMin\");\nlet tempMaximum = global.get(\"tempMax\");\n\nif (data >= tempMinimum && data <= tempMaximum) {\n  msg.payload = \"OK\";\n  global.set(\"tempViolated\", false);\n} else {\n  msg.payload = \"ALERT\";\n}\n\nif ((data < tempMinimum || data > tempMaximum) && global.get(\"tempViolated\") === false) {\n  global.set(\"tempViolations\", (global.get(\"tempViolations\")) + 1);\n  global.set(\"tempViolated\", true);\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 240,
+        "wires": [
+            [
+                "temp_status"
+            ]
+        ]
+    },
+    {
+        "id": "temp_chart",
+        "type": "ui_chart",
+        "z": "8eb383b3f8431e5d",
+        "name": "Temperature Chart",
+        "group": "sensor_group",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "Temperature (°C)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "Waiting For Data",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "50",
+        "removeOlder": "60",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 770,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "humidity_chart",
+        "type": "ui_chart",
+        "z": "8eb383b3f8431e5d",
+        "name": "Humidity Chart",
+        "group": "1270b6e6152b2483",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "Humidity (%)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "Waiting For Data",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": "60",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#ff7f0e",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 780,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "light_chart",
+        "type": "ui_chart",
+        "z": "8eb383b3f8431e5d",
+        "name": "Light Level Chart",
+        "group": "5a921868f374f317",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "label": "Light (lux)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "Waiting For Data",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "54612.50",
+        "removeOlder": "60",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#2ca02c",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 770,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "soil_chart",
+        "type": "ui_chart",
+        "z": "8eb383b3f8431e5d",
+        "name": "Soil Moisture Chart",
+        "group": "2d3f716a8846bed9",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "label": "Soil Moisture (%)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "Waiting For Data",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": "60",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#9467bd",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 770,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "temp_status",
+        "type": "ui_text",
+        "z": "8eb383b3f8431e5d",
+        "group": "status_group",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "Temperature Status",
+        "label": "Temperature",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 990,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "light_status",
+        "type": "ui_text",
+        "z": "8eb383b3f8431e5d",
+        "group": "status_group",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "Light Status",
+        "label": "Light",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 1010,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "soil_status",
+        "type": "ui_text",
+        "z": "8eb383b3f8431e5d",
+        "group": "status_group",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "Soil Status",
+        "label": "Soil Moisture",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 1010,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "temp_min_slider",
+        "type": "ui_slider",
+        "z": "8eb383b3f8431e5d",
+        "name": "Temp Min",
+        "label": "Temp Min",
+        "tooltip": "",
+        "group": "thresholds",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "",
+        "topicType": "str",
+        "min": 0,
+        "max": 50,
+        "step": 1,
+        "className": "",
+        "x": 120,
+        "y": 620,
+        "wires": [
+            [
+                "set_temp_min"
+            ]
+        ]
+    },
+    {
+        "id": "set_temp_min",
+        "type": "function",
+        "z": "8eb383b3f8431e5d",
+        "name": "Set Temp Min",
+        "func": "global.set(\"tempMin\", msg.payload);\n\nmsg.payload = msg.payload + \" °C\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 620,
+        "wires": [
+            [
+                "75665658359c681c"
+            ]
+        ]
+    },
+    {
+        "id": "temp_max_slider",
+        "type": "ui_slider",
+        "z": "8eb383b3f8431e5d",
+        "name": "Temp Max",
+        "label": "Temp Max",
+        "tooltip": "",
+        "group": "thresholds",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "",
+        "topicType": "str",
+        "min": 0,
+        "max": 50,
+        "step": 1,
+        "className": "",
+        "x": 110,
+        "y": 660,
+        "wires": [
+            [
+                "set_temp_max"
+            ]
+        ]
+    },
+    {
+        "id": "set_temp_max",
+        "type": "function",
+        "z": "8eb383b3f8431e5d",
+        "name": "Set Temp Max",
+        "func": "global.set(\"tempMax\", msg.payload);\n\nmsg.payload = msg.payload + \" °C\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 660,
+        "wires": [
+            [
+                "4717c5be457fa616"
+            ]
+        ]
+    },
+    {
+        "id": "light_min_slider",
+        "type": "ui_slider",
+        "z": "8eb383b3f8431e5d",
+        "name": "Light Min",
+        "label": "Light Min",
+        "tooltip": "",
+        "group": "thresholds",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "",
+        "topicType": "str",
+        "min": 0,
+        "max": "54612.50",
+        "step": 10,
+        "className": "",
+        "x": 120,
+        "y": 820,
+        "wires": [
+            [
+                "set_light_min"
+            ]
+        ]
+    },
+    {
+        "id": "set_light_min",
+        "type": "function",
+        "z": "8eb383b3f8431e5d",
+        "name": "Set Light Min",
+        "func": "global.set(\"lightMin\", msg.payload);\n\nmsg.payload = msg.payload + \" lux\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 820,
+        "wires": [
+            [
+                "b79635f83a544f71"
+            ]
+        ]
+    },
+    {
+        "id": "light_max_slider",
+        "type": "ui_slider",
+        "z": "8eb383b3f8431e5d",
+        "name": "Light Max",
+        "label": "Light Max",
+        "tooltip": "",
+        "group": "thresholds",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "",
+        "topicType": "str",
+        "min": 0,
+        "max": "54612.50",
+        "step": 10,
+        "className": "",
+        "x": 120,
+        "y": 860,
+        "wires": [
+            [
+                "set_light_max"
+            ]
+        ]
+    },
+    {
+        "id": "set_light_max",
+        "type": "function",
+        "z": "8eb383b3f8431e5d",
+        "name": "Set Light Max",
+        "func": "global.set(\"lightMax\", msg.payload);\n\nmsg.payload = msg.payload + \" lux\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 860,
+        "wires": [
+            [
+                "85450dcdc7c4a66b"
+            ]
+        ]
+    },
+    {
+        "id": "soil_min_slider",
+        "type": "ui_slider",
+        "z": "8eb383b3f8431e5d",
+        "name": "Soil Min",
+        "label": "Soil Min",
+        "tooltip": "",
+        "group": "thresholds",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "",
+        "topicType": "str",
+        "min": 0,
+        "max": "100",
+        "step": "1",
+        "className": "",
+        "x": 120,
+        "y": 920,
+        "wires": [
+            [
+                "set_soil_min"
+            ]
+        ]
+    },
+    {
+        "id": "set_soil_min",
+        "type": "function",
+        "z": "8eb383b3f8431e5d",
+        "name": "Set Soil Min",
+        "func": "global.set(\"soilMin\", msg.payload);\n\nmsg.payload = msg.payload + \" %\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 920,
+        "wires": [
+            [
+                "db41347e916c43d4"
+            ]
+        ]
+    },
+    {
+        "id": "soil_max_slider",
+        "type": "ui_slider",
+        "z": "8eb383b3f8431e5d",
+        "name": "Soil Max",
+        "label": "Soil Max",
+        "tooltip": "",
+        "group": "thresholds",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "",
+        "topicType": "str",
+        "min": 0,
+        "max": "100",
+        "step": "1",
+        "className": "",
+        "x": 120,
+        "y": 960,
+        "wires": [
+            [
+                "set_soil_max"
+            ]
+        ]
+    },
+    {
+        "id": "set_soil_max",
+        "type": "function",
+        "z": "8eb383b3f8431e5d",
+        "name": "Set Soil Max",
+        "func": "global.set(\"soilMax\", msg.payload);\n\nmsg.payload = msg.payload + \" %\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 960,
+        "wires": [
+            [
+                "23b9c45d46d71512"
+            ]
+        ]
+    },
+    {
+        "id": "1cd8c88cce9f9657",
+        "type": "function",
+        "z": "8eb383b3f8431e5d",
+        "name": "Extract Temperature",
+        "func": "var input = msg.payload;\n\ninput = input.trim();\n\nvar values = input.split(',');\n\nvalues = values.map(function (value) {\n    return parseFloat(value.trim());\n});\n\nmsg.payload = values[0];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 240,
+        "wires": [
+            [
+                "temp_chart",
+                "check_thresholds"
+            ]
+        ]
+    },
+    {
+        "id": "94312657021d26f7",
+        "type": "function",
+        "z": "8eb383b3f8431e5d",
+        "name": "Extract Humidity",
+        "func": "var input = msg.payload;\n\ninput = input.trim();\n\nvar values = input.split(',');\n\nvalues = values.map(function (value) {\n    return parseFloat(value.trim());\n});\n\nmsg.payload = values[1];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 320,
+        "wires": [
+            [
+                "humidity_chart",
+                "2b3ec01a29b1b559"
+            ]
+        ]
+    },
+    {
+        "id": "1164d906a302790c",
+        "type": "function",
+        "z": "8eb383b3f8431e5d",
+        "name": "Extract Light",
+        "func": "var input = msg.payload;\n\ninput = input.trim();\n\nvar values = input.split(',');\n\nvalues = values.map(function (value) {\n    return parseFloat(value.trim());\n});\n\nmsg.payload = values[2];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 440,
+        "wires": [
+            [
+                "light_chart",
+                "64a503088d45df3a"
+            ]
+        ]
+    },
+    {
+        "id": "cebe1e92633524e1",
+        "type": "function",
+        "z": "8eb383b3f8431e5d",
+        "name": "Extract Soil Moisture",
+        "func": "var input = msg.payload;\n\ninput = input.trim();\n\nvar values = input.split(',');\n\nvalues = values.map(function (value) {\n    return parseFloat(value.trim());\n});\n\nmsg.payload = values[3];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 520,
+        "wires": [
+            [
+                "soil_chart",
+                "e6686e823c348e4a"
+            ]
+        ]
+    },
+    {
+        "id": "2b3ec01a29b1b559",
+        "type": "function",
+        "z": "8eb383b3f8431e5d",
+        "name": "Check Humidity",
+        "func": "let data = msg.payload;\n\nif (isNaN(data)) {\n  msg.payload = \"NOT CONNECTED\";\n  return msg;\n}\n\nlet humidityMinimum = global.get(\"humidityMin\");\nlet humidityMaximum = global.get(\"humidityMax\");\n\nif (data >= humidityMinimum && data <= humidityMaximum) {\n  msg.payload = \"OK\";\n  global.set(\"humidityViolated\", false);\n} else {\n  msg.payload = \"ALERT\";\n}\n\nif ((data < humidityMinimum || data > humidityMaximum) && global.get(\"tempViolated\") === false) {\n  global.set(\"humidityViolations\", (global.get(\"humidityViolations\")) + 1);\n  global.set(\"humidityViolated\", true);\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 360,
+        "wires": [
+            [
+                "02a95f3fd8fef3fc"
+            ]
+        ]
+    },
+    {
+        "id": "64a503088d45df3a",
+        "type": "function",
+        "z": "8eb383b3f8431e5d",
+        "name": "Check Light",
+        "func": "let data = msg.payload;\n\nif (data === -1) {\n  msg.payload = \"NOT CONNECTED\";\n  return msg;\n}\n\nlet lightMinimum = global.get(\"lightMin\");\nlet lightMaximum = global.get(\"lightMax\");\n\nif (data >= lightMinimum && data <= lightMaximum) {\n    msg.payload = \"OK\";\n    global.set(\"lightViolated\", false);\n} else {\n    msg.payload = \"ALERT\";\n}\n\nif ((data < lightMinimum || data > lightMaximum) && global.get(\"lightViolated\") === false) {\n  global.set(\"lightViolations\", (global.get(\"lightViolations\")) + 1);\n  global.set(\"lightViolated\", true);\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 480,
+        "wires": [
+            [
+                "light_status"
+            ]
+        ]
+    },
+    {
+        "id": "e6686e823c348e4a",
+        "type": "function",
+        "z": "8eb383b3f8431e5d",
+        "name": "Check Moisture",
+        "func": "let data = msg.payload;\n\nlet soilMinimum = global.get(\"soilMin\");\nlet soilMaximum = global.get(\"soilMax\");\n\nif (data >= soilMinimum && data <= soilMaximum) {\n    msg.payload = \"OK\";\n    global.set(\"soilViolated\", false);\n} else {\n    msg.payload = \"ALERT\";\n}\n\nif ((data < soilMinimum || data > soilMaximum) && global.get(\"soilViolated\") === false) {\n    global.set(\"soilViolations\", (global.get(\"soilViolations\")) + 1);\n    global.set(\"soilViolated\", true);\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 600,
+        "wires": [
+            [
+                "soil_status"
+            ]
+        ]
+    },
+    {
+        "id": "02a95f3fd8fef3fc",
+        "type": "ui_text",
+        "z": "8eb383b3f8431e5d",
+        "group": "status_group",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "Humidity Status",
+        "label": "Humidity",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1000,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "78e297ec646a85db",
+        "type": "ui_slider",
+        "z": "8eb383b3f8431e5d",
+        "name": "Humidity Min",
+        "label": "Humidity Min",
+        "tooltip": "",
+        "group": "thresholds",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "",
+        "topicType": "str",
+        "min": 0,
+        "max": "100",
+        "step": 1,
+        "className": "",
+        "x": 110,
+        "y": 720,
+        "wires": [
+            [
+                "476bf70d9549e6bc"
+            ]
+        ]
+    },
+    {
+        "id": "22e3eec3cca76b2c",
+        "type": "ui_slider",
+        "z": "8eb383b3f8431e5d",
+        "name": "Humidity Max",
+        "label": "Humidity Max",
+        "tooltip": "",
+        "group": "thresholds",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "",
+        "topicType": "str",
+        "min": 0,
+        "max": "100",
+        "step": 1,
+        "className": "",
+        "x": 100,
+        "y": 760,
+        "wires": [
+            [
+                "3e6f2eb8956cb8fc"
+            ]
+        ]
+    },
+    {
+        "id": "476bf70d9549e6bc",
+        "type": "function",
+        "z": "8eb383b3f8431e5d",
+        "name": "Set Humidity Min",
+        "func": "global.set(\"humidityMin\", msg.payload);\n\nmsg.payload = msg.payload + \" %\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 720,
+        "wires": [
+            [
+                "cf6ef410761f02a0"
+            ]
+        ]
+    },
+    {
+        "id": "3e6f2eb8956cb8fc",
+        "type": "function",
+        "z": "8eb383b3f8431e5d",
+        "name": "Set Humidity Max",
+        "func": "global.set(\"humidityMax\", msg.payload);\n\nmsg.payload = msg.payload + \" %\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 760,
+        "wires": [
+            [
+                "581a944ad498955e"
+            ]
+        ]
+    },
+    {
+        "id": "c29cac181de41a7c",
+        "type": "inject",
+        "z": "8eb383b3f8431e5d",
+        "name": "Daily Message",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "00 09 * * *",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 780,
+        "y": 720,
+        "wires": [
+            [
+                "fb25584f7864ad71"
+            ]
+        ]
+    },
+    {
+        "id": "fb25584f7864ad71",
+        "type": "function",
+        "z": "8eb383b3f8431e5d",
+        "name": "Write Report",
+        "func": "let _tempViolations = global.get(\"tempViolations\");\nlet _humidityViolations = global.get(\"humidityViolations\");\nlet _lightViolations = global.get(\"lightViolations\");\nlet _soilViolations = global.get(\"soilViolations\");\n\nlet totalViolations = _tempViolations + _humidityViolations + _lightViolations + _soilViolations;\n\nlet _streak = global.get(\"streak\") || 0;\n\nif (totalViolations === 0) {\n    _streak += 1;\n} else {\n    _streak = 0;\n}\n\nglobal.set(\"streak\", _streak);\n\nlet grade = \"A\";\n\nif (totalViolations > 20) {\n    grade = \"E\";\n} else if (totalViolations > 15) {\n    grade = \"D\";\n} else if (totalViolations > 10) {\n    grade = \"C\";\n} else if (totalViolations > 5) {\n    grade = \"B\";\n}\n\nmsg.payload = `\n🌿 Daily Plant Health Report 🌿\n\nTemperature Violations: ${_tempViolations}\nHumidity Violations: ${_humidityViolations}\nLight Violations: ${_lightViolations}\nSoil Moisture Violations: ${_soilViolations}\n\nTotal Violations: ${totalViolations}\nHealth Grade: ${grade}\n🔥 Streak: ${_streak} day(s) without any violations!\n\n📆 Date: ${new Date().toLocaleString()}\n`;\n\nmsg.topic = \"Daily Plant Health Report\";\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 970,
+        "y": 720,
+        "wires": [
+            [
+                "6fea37b9b5947ace",
+                "03ef10cabb068803"
+            ]
+        ]
+    },
+    {
+        "id": "03ef10cabb068803",
+        "type": "e-mail",
+        "z": "8eb383b3f8431e5d",
+        "server": "smtp.gmail.com",
+        "port": "465",
+        "authtype": "BASIC",
+        "saslformat": true,
+        "token": "oauth2Response.access_token",
+        "secure": true,
+        "tls": true,
+        "name": "terrabird38@gmail.com",
+        "dname": "email",
+        "x": 1250,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "3971eb2afe95c660",
+        "type": "link in",
+        "z": "8eb383b3f8431e5d",
+        "name": "link in 1",
+        "links": [],
+        "x": 1135,
+        "y": 780,
+        "wires": [
+            [
+                "382fd955c10ce9da"
+            ]
+        ]
+    },
+    {
+        "id": "6fea37b9b5947ace",
+        "type": "link out",
+        "z": "8eb383b3f8431e5d",
+        "name": "link out 1",
+        "mode": "link",
+        "links": [],
+        "x": 1085,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "382fd955c10ce9da",
+        "type": "function",
+        "z": "8eb383b3f8431e5d",
+        "name": "Reset Counters",
+        "func": "global.set(\"tempViolations\", 0);\nglobal.set(\"humidityViolations\", 0);\nglobal.set(\"lightViolations\", 0);\nglobal.set(\"soilViolations\", 0);\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1260,
+        "y": 780,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "668437222cc97e6b",
+        "type": "inject",
+        "z": "8eb383b3f8431e5d",
+        "name": "Initialise Counters",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 790,
+        "y": 840,
+        "wires": [
+            [
+                "26da55886cc35e6b"
+            ]
+        ]
+    },
+    {
+        "id": "26da55886cc35e6b",
+        "type": "function",
+        "z": "8eb383b3f8431e5d",
+        "name": "Set Counters",
+        "func": "global.set(\"tempViolations\", 0);\nglobal.set(\"humidityViolations\", 0);\nglobal.set(\"lightViolations\", 0);\nglobal.set(\"soilViolations\", 0);\n\nglobal.set(\"tempViolated\", false);\nglobal.set(\"humidityViolated\", false);\nglobal.set(\"lightViolated\", false);\nglobal.set(\"soilViolated\", false);\n\nglobal.set(\"streak\", 0);\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 990,
+        "y": 840,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dc3194c21c9676c9",
+        "type": "ui_text",
+        "z": "8eb383b3f8431e5d",
+        "group": "a8e4420e5be95f04",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Display Streaks",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1080,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "cf0b88a73b0b6f8e",
+        "type": "function",
+        "z": "8eb383b3f8431e5d",
+        "name": "Get Streaks",
+        "func": "return { payload: global.get(\"streak\")};",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 910,
+        "y": 920,
+        "wires": [
+            [
+                "dc3194c21c9676c9"
+            ]
+        ]
+    },
+    {
+        "id": "9034c8815c813996",
+        "type": "ui_button",
+        "z": "8eb383b3f8431e5d",
+        "name": "Streaks",
+        "group": "a8e4420e5be95f04",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Get Streaks",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 760,
+        "y": 920,
+        "wires": [
+            [
+                "cf0b88a73b0b6f8e"
+            ]
+        ]
+    },
+    {
+        "id": "75665658359c681c",
+        "type": "ui_text",
+        "z": "8eb383b3f8431e5d",
+        "group": "9ba528f4fd6d10e9",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "name": "Temp Min",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 540,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "4717c5be457fa616",
+        "type": "ui_text",
+        "z": "8eb383b3f8431e5d",
+        "group": "9ba528f4fd6d10e9",
+        "order": 9,
+        "width": 0,
+        "height": 0,
+        "name": "Temp Max",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 550,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "cf6ef410761f02a0",
+        "type": "ui_text",
+        "z": "8eb383b3f8431e5d",
+        "group": "9ba528f4fd6d10e9",
+        "order": 10,
+        "width": 0,
+        "height": 0,
+        "name": "Humidity Min",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 550,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "581a944ad498955e",
+        "type": "ui_text",
+        "z": "8eb383b3f8431e5d",
+        "group": "9ba528f4fd6d10e9",
+        "order": 11,
+        "width": 0,
+        "height": 0,
+        "name": "Humidity Max",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 560,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "b79635f83a544f71",
+        "type": "ui_text",
+        "z": "8eb383b3f8431e5d",
+        "group": "9ba528f4fd6d10e9",
+        "order": 12,
+        "width": 0,
+        "height": 0,
+        "name": "Light Min",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 540,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "85450dcdc7c4a66b",
+        "type": "ui_text",
+        "z": "8eb383b3f8431e5d",
+        "group": "9ba528f4fd6d10e9",
+        "order": 13,
+        "width": 0,
+        "height": 0,
+        "name": "Light Max",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 540,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "db41347e916c43d4",
+        "type": "ui_text",
+        "z": "8eb383b3f8431e5d",
+        "group": "9ba528f4fd6d10e9",
+        "order": 14,
+        "width": 0,
+        "height": 0,
+        "name": "Soil Min",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 540,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "23b9c45d46d71512",
+        "type": "ui_text",
+        "z": "8eb383b3f8431e5d",
+        "group": "9ba528f4fd6d10e9",
+        "order": 15,
+        "width": 0,
+        "height": 0,
+        "name": "Soil Max",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 540,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "b719bec00e8d9d89",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "6a30d29d2b8944e09ae2653d6dcfaec2.s1.eu.hivemq.cloud",
+        "port": "8883",
+        "tls": "",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "sensor_group",
+        "type": "ui_group",
+        "name": "Temperature Readings",
+        "tab": "dashboard_tab",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "1270b6e6152b2483",
+        "type": "ui_group",
+        "name": "Humidity Readings",
+        "tab": "dashboard_tab",
+        "order": 2,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "5a921868f374f317",
+        "type": "ui_group",
+        "name": "Light Readings",
+        "tab": "dashboard_tab",
+        "order": 3,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "2d3f716a8846bed9",
+        "type": "ui_group",
+        "name": "Moisture Readings",
+        "tab": "dashboard_tab",
+        "order": 4,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "status_group",
+        "type": "ui_group",
+        "name": "Sensor Status",
+        "tab": "dashboard_tab",
+        "order": 5,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "thresholds",
+        "type": "ui_group",
+        "name": "Threshold Controls",
+        "tab": "dashboard_tab",
+        "order": 6,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "a8e4420e5be95f04",
+        "type": "ui_group",
+        "name": "Streaks",
+        "tab": "dashboard_tab",
+        "order": 8,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "9ba528f4fd6d10e9",
+        "type": "ui_group",
+        "name": "Threshold Values",
+        "tab": "dashboard_tab",
+        "order": 7,
+        "disp": true,
+        "width": "4",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "dashboard_tab",
+        "type": "ui_tab",
+        "name": "Sensor Dashboard",
+        "icon": "dashboard",
+        "order": 1
+    }
+]
